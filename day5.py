@@ -76,9 +76,9 @@ while True:
     third_param_mode, opcode = divmod(opcode, 10000)
     second_param_mode, opcode = divmod(opcode, 1000)
     first_param_mode, opcode = divmod(opcode, 100)
-    print(opcode)
+    # print(opcode)
     parameters = data[position.get() + 1 : position.get() + offsets[opcode]]
-    print(opcode, parameters)
+    # print(opcode, parameters)
     if first_param_mode:
         parameters[0] = data.index(parameters[0])
     if len(parameters) > 1:
@@ -101,7 +101,7 @@ while True:
     third_param_mode, opcode = divmod(opcode, 10000)
     second_param_mode, opcode = divmod(opcode, 1000)
     first_param_mode, opcode = divmod(opcode, 100)
-    print(position.get(), opcode, third_param_mode, second_param_mode, first_param_mode)
+    # print(position.get(), opcode, third_param_mode, second_param_mode, first_param_mode)
     parameters = data2[position.get() + 1 : position.get() + offsets[opcode]]
     if first_param_mode:
         parameters[0] = data2.index(parameters[0])
@@ -110,7 +110,7 @@ while True:
             parameters[1] = data2.index(parameters[1])
         if third_param_mode:
             parameters[2] = data2.index(parameters[2])
-    print(opcode, parameters)
+    # print(opcode, parameters)
     codes[opcode](data2, *parameters, position)
     position.set(position.get() + offsets[opcode])
     opcode = data2[position.get()]
