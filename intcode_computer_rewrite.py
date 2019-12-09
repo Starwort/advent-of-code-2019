@@ -1,4 +1,5 @@
 from collections import defaultdict
+import typing
 
 
 class InfiniteTape:
@@ -48,9 +49,20 @@ class Address:
 
 
 class Computer:
-    def __init__(self, data: str, relative_base: int = 0):
+    def __init__(
+        self,
+        data: str,
+        in_function: typing.Callable[[None], int] = lambda: int(
+            input("Program is requesting input\n>>> ")
+        ),
+        out_function: typing.Callable[[int], None] = print,
+        relative_base: int = 0,
+    ):
         self.tape = InfiniteTape(int(i) for i in data.split(","))
         self.ip = IP()
+
+        self.in_function = in_function
+        self.out_function = out_function
 
         self.relative_base = relative_base
         self.instructions = [
@@ -67,6 +79,12 @@ class Computer:
         ]
         self.arg_no = [0, 3, 3, 1, 1, 2, 2, 3, 3, 1]
         self.halted = False
+        self.last_instruction = -1
+
+    def run_until_instruction(self, opcode: int):
+        self.eval_one_instruction()
+        while not self.last_instruction == opcode:
+            self.eval_one_instruction()
 
     def eval_one_instruction(self):
         if self.halted:
@@ -74,6 +92,7 @@ class Computer:
         ip = self.ip.get()
         opcode = self.tape[ip]
         param_modes, opcode = divmod(opcode, 100)
+        self.last_instruction = opcode
         if opcode == 99:
             self.halted = True
             return
@@ -101,10 +120,10 @@ class Computer:
         c.write(a.value * b.value)
 
     def take_input(self, a):
-        a.write(int(input("Program is requesting input\n>>> ")))
+        a.write(self.in_function())
 
     def output(self, a):
-        print(a.value)
+        self.out_function(a.value)
 
     def jnz(self, a, b):
         if a.value:
