@@ -30,11 +30,11 @@ try:
     import colorama as colour
 
     colour.init(autoreset=True)
-    black = colour.Back.BLACK + " "
-    white = colour.Back.WHITE + " "
+    black = colour.Back.BLACK + "  "
+    white = colour.Back.WHITE + "  "
 except:
-    black = " "
-    white = "█"
+    black = "  "
+    white = "██"
 
 final_image = deepcopy(image[0])
 for layer in image:
