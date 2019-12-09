@@ -52,7 +52,7 @@ class Computer:
     def __init__(
         self,
         data: str,
-        in_function: typing.Callable[[None], int] = lambda: int(
+        in_function: typing.Callable[[], int] = lambda: int(
             input("Program is requesting input\n>>> ")
         ),
         out_function: typing.Callable[[int], None] = print,
@@ -145,5 +145,5 @@ class Computer:
 
 if __name__ == "__main__":
     tape = input("Enter the program\n>>> ")
-    computer = Computer(tape, 0)
+    computer = Computer(tape)
     computer.run_until_complete()
