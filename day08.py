@@ -29,7 +29,7 @@ from copy import deepcopy
 try:
     import colorama as colour
 
-    colour.init()
+    colour.init(autoreset=True)
     black = colour.Back.BLACK + " "
     white = colour.Back.WHITE + " "
 except:
@@ -44,4 +44,3 @@ for layer in image:
                 final_image[y][x] = col
 for row in final_image:
     print("".join(black if i == "0" else white for i in row))
-
