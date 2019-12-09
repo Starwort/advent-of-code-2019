@@ -83,8 +83,12 @@ class Computer:
 
     def run_until_instruction(self, opcode: int):
         self.eval_one_instruction()
-        while not self.last_instruction == opcode:
+        while not (self.last_instruction == opcode or self.halted):
             self.eval_one_instruction()
+
+    @property
+    def next_instruction(self):
+        return self.tape[self.ip.get()] % 100
 
     def eval_one_instruction(self):
         if self.halted:
@@ -96,9 +100,14 @@ class Computer:
         if opcode == 99:
             self.halted = True
             return
-        parameters = [
-            Address(self.tape, ip + i + 1) for i in range(self.arg_no[opcode])
-        ]
+        try:
+            parameters = [
+                Address(self.tape, ip + i + 1) for i in range(self.arg_no[opcode])
+            ]
+        except:
+            print(ip, param_modes, opcode)
+            self.halted = True
+            raise StopIteration
         param_modes = str(param_modes).zfill(self.arg_no[opcode])[::-1]
         self.ip.set(ip + self.arg_no[opcode] + 1)
         for param, mode in zip(parameters, param_modes):
