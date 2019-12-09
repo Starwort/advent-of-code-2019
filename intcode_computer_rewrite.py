@@ -96,15 +96,12 @@ class Computer:
 
     def add(self, a, b, c):
         c.write(a.value + b.value)
-        # self.tape[c] = a + b
 
     def mul(self, a, b, c):
         c.write(a.value * b.value)
-        # self.tape[c] = a * b
 
     def take_input(self, a):
         a.write(int(input("Program is requesting input\n>>> ")))
-        # self.tape[a] = int(input("Program is requesting input\n>>> "))
 
     def output(self, a):
         print(a.value)
@@ -119,15 +116,9 @@ class Computer:
 
     def tlt(self, a, b, c):
         c.write(int(a.value < b.value))
-        # if a < b:
-        # else:
-        #     self.tape[c] = 0
 
     def teq(self, a, b, c):
         c.write(int(a.value == b.value))
-        # if a == b:
-        # else:
-        #     self.tape[c] = 0
 
     def mod_base(self, a):
         self.relative_base += a.value
