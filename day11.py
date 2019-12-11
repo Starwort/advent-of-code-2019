@@ -18,14 +18,14 @@ def handle_out(out):
         painted.add(roboloc)
         turn_this_out = True
     else:
-        robodir += (-1) ** out
+        robodir -= (-1) ** out
         robodir %= 4
         if robodir == 0:
-            roboloc = (roboloc[0], roboloc[1] + 1)
+            roboloc = (roboloc[0], roboloc[1] - 1)
         if robodir == 1:
             roboloc = (roboloc[0] + 1, roboloc[1])
         if robodir == 2:
-            roboloc = (roboloc[0], roboloc[1] - 1)
+            roboloc = (roboloc[0], roboloc[1] + 1)
         if robodir == 3:
             roboloc = (roboloc[0] - 1, roboloc[1])
         turn_this_out = False
@@ -53,7 +53,8 @@ try:
 except:
     black = "  "
     white = "██"
-for y in range(max_y, min_y - 1, -1):
-    for x in range(max_x, min_x - 1, -1):
+
+for y in range(min_y, max_y + 1):
+    for x in range(min_x, max_x + 1):
         print([black, white][panels[x, y]], end="")
     print()
