@@ -25,14 +25,6 @@ def fill_point2(i):
         else:
             score = point2[2]
         point2.clear()
-        # min_x = min(i[0] for i in points2.keys())
-        # max_x = max(i[0] for i in points2.keys())
-        # min_y = min(i[1] for i in points2.keys())
-        # max_y = max(i[1] for i in points2.keys())
-        # for y in range(min_y, max_y + 1):
-        #     for x in range(min_x, max_x + 1):
-        #         print(" #._o"[points2[x, y]], end="")
-        #     print()
 
 
 computer = Computer(data, out_function=fill_point)
@@ -47,7 +39,7 @@ print(out)
 def ai():
     ball_x = None
     paddle_x = None
-    for (x, y), tile in points2.items():
+    for (x, _), tile in points2.items():
         if tile == 4:
             ball_x = x
         if tile == 3:
