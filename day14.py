@@ -179,7 +179,9 @@ if __name__ == "__main__":
     print(calculate_ore())
 
     AVAILABLE_ORE = 1000000000000
-    max_fuel = AVAILABLE_ORE // calculate_ore_float()
+    max_fuel = int(AVAILABLE_ORE / ceil(calculate_ore_float()))
+    leftover_ingredients.clear()
     while calculate_ore(max_fuel + 1) <= AVAILABLE_ORE:
         max_fuel += 1
+        leftover_ingredients.clear()
     print(int(max_fuel))
