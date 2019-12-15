@@ -1,6 +1,5 @@
 from intcode_computer_rewrite import Computer
 from collections import defaultdict
-import colorama as colour
 
 UP = 1
 DOWN = 2
