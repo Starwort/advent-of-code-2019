@@ -1,0 +1,1 @@
+from intcode_computer_rewrite import Computer
