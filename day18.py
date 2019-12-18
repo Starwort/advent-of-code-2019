@@ -87,7 +87,7 @@ from functools import lru_cache
 import string
 
 
-def _reachable_keys(map, position, obtained):
+def reachable_keys(map, position, obtained):
     queue = deque([position])
     dists = {position: 0}
     keys = {}
@@ -102,9 +102,7 @@ def _reachable_keys(map, position, obtained):
             if not (0 <= x < len(map[0]) and 0 <= y < len(map)):
                 continue
             tile = map[y][x]
-            if tile == "#":
-                continue
-            if (y, x) in dists:
+            if tile == "#" or (y, x) in dists:
                 continue
             dists[y, x] = dists[row, col] + 1
             if tile in string.ascii_uppercase and tile.lower() not in obtained:
@@ -116,18 +114,14 @@ def _reachable_keys(map, position, obtained):
     return keys
 
 
-def reachable_keys(map, positions, obtained):
-    keys = {}
-    for robot, start in enumerate(positions):
-        for key, (distance, position) in _reachable_keys(map, start, obtained).items():
-            keys[key] = distance, position, robot
-    return keys
-
-
 @lru_cache(maxsize=None)
 def shortest_path(positions, obtained):
-    keys = reachable_keys(map, positions, obtained)
-    if len(keys) == 0:
+    keys = {
+        key: (distance, position, robot)
+        for robot, start in enumerate(positions)
+        for key, (distance, position) in reachable_keys(map, start, obtained).items()
+    }
+    if not keys:
         return 0
     distances = []
     for key, (distance, position, robot) in keys.items():
