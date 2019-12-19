@@ -128,9 +128,7 @@ def shortest_path(positions, obtained):
         robot_positions = tuple(
             [initial, position][i == robot] for i, initial in enumerate(positions)
         )
-        distances.append(
-            distance + shortest_path(robot_positions, "".join(sorted(obtained + key)))
-        )
+        distances.append(distance + shortest_path(robot_positions, obtained | {key}))
     return min(distances)
 
 
@@ -142,7 +140,7 @@ for y, row in enumerate(map):
     else:
         continue
     break
-print(shortest_path((position,), ""))
+print(shortest_path((position,), set()))
 shortest_path.cache_clear()
 map[y - 1][x - 1] = "@"
 map[y - 1][x] = "#"
@@ -155,5 +153,7 @@ map[y + 1][x] = "#"
 map[y + 1][x + 1] = "@"
 
 print(
-    shortest_path(((x - 1, y - 1), (x - 1, y + 1), (x + 1, y - 1), (x + 1, y + 1)), "")
+    shortest_path(
+        ((x - 1, y - 1), (x - 1, y + 1), (x + 1, y - 1), (x + 1, y + 1)), set()
+    )
 )
