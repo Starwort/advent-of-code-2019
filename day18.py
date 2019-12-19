@@ -92,8 +92,8 @@ def reachable_keys(map, position, obtained):
     dists = {position: 0}
     keys = {}
     while queue:
-        row, col = queue.popleft()
-        for (y, x) in [
+        col, row = queue.popleft()
+        for (x, y) in [
             (row, col + 1),
             (row, col - 1),
             (row + 1, col),
@@ -102,15 +102,15 @@ def reachable_keys(map, position, obtained):
             if not (0 <= x < len(map[0]) and 0 <= y < len(map)):
                 continue
             tile = map[y][x]
-            if tile == "#" or (y, x) in dists:
+            if tile == "#" or (x, y) in dists:
                 continue
-            dists[y, x] = dists[row, col] + 1
+            dists[x, y] = dists[col, row] + 1
             if tile in string.ascii_uppercase and tile.lower() not in obtained:
                 continue
             if tile in string.ascii_lowercase and tile not in obtained:
-                keys[tile] = dists[y, x], (y, x)
+                keys[tile] = dists[x, y], (x, y)
             else:
-                queue.append((y, x))
+                queue.append((x, y))
     return keys
 
 
@@ -137,12 +137,12 @@ def shortest_path(positions, obtained):
 for y, row in enumerate(map):
     for x, tile in enumerate(row):
         if tile == "@":
-            position = (y, x)
+            position = (x, y)
             break
     else:
         continue
     break
-print(shortest_path(((y, x),), ""))
+print(shortest_path((position,), ""))
 shortest_path.cache_clear()
 map[y - 1][x - 1] = "@"
 map[y - 1][x] = "#"
@@ -155,5 +155,5 @@ map[y + 1][x] = "#"
 map[y + 1][x + 1] = "@"
 
 print(
-    shortest_path(((y - 1, x - 1), (y - 1, x + 1), (y + 1, x - 1), (y + 1, x + 1)), "")
+    shortest_path(((x - 1, y - 1), (x - 1, y + 1), (x + 1, y - 1), (x + 1, y + 1)), "")
 )
