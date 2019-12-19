@@ -61,30 +61,60 @@ cdef class Address:
     cdef write(self, data: int):
         self.tape[self.location] = data
 
+cdef void add(computer: Computer, a: Address, b: Address, c: Address):
+    c.write(a.value + b.value)
+
+cdef void mul(computer: Computer, a: Address, b: Address, c: Address):
+    c.write(a.value * b.value)
+
+cdef void take_input(computer: Computer, a: Address, b: Address, c: Address):
+    a.write(computer.in_function())
+
+cdef void output(computer: Computer, a: Address, b: Address, c: Address):
+    computer.out_function(a.value)
+
+cdef void jnz(computer: Computer, a: Address, b: Address, c: Address):
+    if a.value:
+        computer.ip.set(b.value)
+
+cdef void jz(computer: Computer, a: Address, b: Address, c: Address):
+    if not a.value:
+        computer.ip.set(b.value)
+
+cdef void tlt(computer: Computer, a: Address, b: Address, c: Address):
+    c.write(int(a.value < b.value))
+
+cdef void teq(computer: Computer, a: Address, b: Address, c: Address):
+    c.write(int(a.value == b.value))
+
+cdef void mod_base(computer: Computer, a: Address, b: Address, c: Address):
+    computer.relative_base += a.value
+
+cdef int last_instruction
+cdef op instructions[10]
+cdef int arg_no[10]
+arg_no = [0, 3, 3, 1, 1, 2, 2, 3, 3, 1]
+instructions = [
+    add,
+    add,
+    mul,
+    take_input,
+    output,
+    jnz,
+    jz,
+    tlt,
+    teq,
+    mod_base,
+]
 @cython.freelist(8)
 cdef class Computer:
+
     cdef InfiniteTape tape
     cdef IP ip
     #cdef inp in_function
     #cdef out out_function
     cdef int relative_base
     cpdef bint halted
-    cdef int last_instruction
-    cdef op instructions[10]
-    cdef int arg_no[10]
-    arg_no = [0, 3, 3, 1, 1, 2, 2, 3, 3, 1]
-    instructions = [
-        add,
-        add,
-        mul,
-        take_input,
-        output,
-        jnz,
-        jz,
-        tlt,
-        teq,
-        mod_base,
-    ]
     def __init__(
         self,
         data: str,
@@ -138,7 +168,7 @@ cdef class Computer:
         self.ip.set(ip + self.arg_no[opcode] + 1)
         cdef Address param
         cdef str mode
-        cdef position
+        cdef int position
         for position in range(3):
         #for param, mode in zip(parameters, param_str):
             param = parameters[position]
@@ -154,36 +184,6 @@ cdef class Computer:
     cpdef run_until_complete(self):
         while not self.halted:
             self.eval_one_instruction()
-
-    cdef void add(self, a: Address, b: Address, c: Address):
-        c.write(a.value + b.value)
-
-    cdef void mul(self, a: Address, b: Address, c: Address):
-        c.write(a.value * b.value)
-
-    cdef void take_input(self, a: Address, b: Address, c: Address):
-        a.write(self.in_function())
-
-    cdef void output(self, a: Address, b: Address, c: Address):
-        self.out_function(a.value)
-
-    cdef void jnz(self, a: Address, b: Address, c: Address):
-        if a.value:
-            self.ip.set(b.value)
-
-    cdef void jz(self, a: Address, b: Address, c: Address):
-        if not a.value:
-            self.ip.set(b.value)
-
-    cdef void tlt(self, a: Address, b: Address, c: Address):
-        c.write(int(a.value < b.value))
-
-    cdef void teq(self, a: Address, b: Address, c: Address):
-        c.write(int(a.value == b.value))
-
-    cdef void mod_base(self, a: Address, b: Address, c: Address):
-        self.relative_base += a.value
-
 
 if __name__ == "__main__":
     tape = input("Enter the program\n>>> ")
