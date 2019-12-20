@@ -140,7 +140,7 @@ cdef class Computer:
             self.eval_one_instruction()
 
     @property
-    def next_instruction(self):
+    def int next_instruction(self):
         return self.tape[self.ip.get()] % 100
 
     cpdef eval_one_instruction(self):
