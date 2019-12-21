@@ -223,7 +223,7 @@ for y, entrance_name in enumerate(inside_r):
         portals[entrance_name].add((coff[0] + cwid[0], y + coff[1]))
         portals_to_name[(coff[0] + cwid[0], y + coff[1])] = entrance_name
 # search_map = defaultdict(lambda: 9999)
-print(portals)
+# print(portals)
 position = list(portals["AA"])[0]
 destination = list(portals["ZZ"])[0]
 import colorama as colour
@@ -252,14 +252,14 @@ def search(x, y):
             if tile != "." or (x, y) in dists:
                 continue
             potential_name = portals_to_name.get((x, y))
-            if potential_name == "ZZ":
-                print(dists[col, row] + 1)
             if len(portals.get(potential_name, "")) > 1:
-                print("taking a portal:", potential_name)
+                # print("taking a portal:", potential_name)
                 # taken_portals.add(potential_name)
                 target = list(portals[potential_name] - {(x, y)})[0]
                 dists[target] = dists[col, row] + 2
                 queue.append(target)
+                if potential_name == "ZZ":
+                    return dists
             dists[x, y] = dists[col, row] + 1
             queue.append((x, y))
     return dists
