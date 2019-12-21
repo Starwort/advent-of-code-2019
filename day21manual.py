@@ -17,8 +17,6 @@ for instruction_type in ("OR", "AND", "NOT"):
         for reg_y in "TJ":
             all_instructions.append(f"{instruction_type} {reg_x} {reg_y}")
 
-last_result = ""
-
 
 def out(i):
     if i > 127:
@@ -38,6 +36,8 @@ AND D J
 WALK
 """
 )
+computer = Computer(data, in_function=in_, out_function=out)
+computer.run_until_complete()
 queue = list(  # If there's a hole anywhere except D, jump unless there's no next jump or place to run
     """\
 NOT A J
@@ -55,4 +55,3 @@ RUN
 )
 computer = Computer(data, in_function=in_, out_function=out)
 computer.run_until_complete()
-last_result = ""
