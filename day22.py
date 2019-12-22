@@ -207,7 +207,7 @@ print(deck.index(2019))
 # odiff = offset after one pass from =0 (summative identity)
 # idiff = increment after one pass from =1 (multiplicative identity)
 # one pass:
-# - offset += increment * diff
+# - offset += increment * odiff
 # - increment *= idiff
 # increment being multiplied by a number repeatedly - exponentiation
 # increment = idiff ** number % 119315717514047 (if we go more than one deck at once we could stay put)
@@ -226,22 +226,37 @@ print(deck.index(2019))
 # a = odiff
 # offset = odiff * (1 - pow(idiff, number, 119315717514047) * pow(1-idiff, 119315717514045, 119315717514047))
 # calculate diffs
+deck_len = 119315717514047
+times = 101741582076661
 offset, increment = (0, 1)
 
 for instruction in data:
     if match := deal_new.match(instruction):
-        increment = -increment
+        increment *= -1
+        increment %= deck_len
         offset += increment
+        offset %= deck_len
     elif match := deal_inc.match(instruction):
-        increment *= pow(int(match.group(1)), 119315717514045, 119315717514047)
+        increment *= pow(int(match.group(1)), deck_len - 2, deck_len)
+        increment %= deck_len
     elif match := cut.match(instruction):
         offset += increment * int(match.group(1))
-final_inc = pow(increment, 101741582076661, 119315717514047)
+        offset %= deck_len
+# offset1, increment1 = (0, 1)
+
+# for instruction in data:
+#     if match := deal_new.match(instruction):
+#         increment1 *= -1
+#         offset1 += increment1
+#     elif match := deal_inc.match(instruction):
+#         increment1 *= pow(int(match.group(1)), 10005, 10007)
+#     elif match := cut.match(instruction):
+#         offset1 += increment1 * int(match.group(1))
+final_inc = pow(increment, times, deck_len)
 final_off = offset * (
-    1
-    - pow(increment, 101741582076661, 119315717514047)
-    * pow(1 - increment, 119315717514045, 119315717514047)
+    (1 - pow(increment, times, deck_len)) * pow(1 - increment, deck_len - 2, deck_len)
 )
-print((2020 * final_inc + final_off) % 119315717514047)
+# print((1879 * increment1 + offset1) % 10007)
+print((2020 * final_inc + final_off) % deck_len)
 # print(deck[2020])
 # print(deck)
