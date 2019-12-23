@@ -23,8 +23,15 @@ def _in(id):
             in_streams[0].extend(nat)
             history[:] = [history[1], nat[1]]
             if history[0] == history[1]:
+                print(
+                    colour.Fore.GREEN
+                    + colour.Cursor.POS(y=7, x=16)
+                    + "Part 2:"
+                    + colour.Cursor.POS(y=7, x=30 - len(str(history[1])))
+                    + str(history[1])
+                )
+                print_vis()
                 print()
-                print(history[1])
                 exit()
             idle[0] = False
             state[0] = 100
@@ -41,7 +48,12 @@ def out(id, num):
         stream.clear()
         if dest == 255:
             if nat == [0, 0]:
-                print(y)
+                print(
+                    colour.Fore.GREEN
+                    + "Part 1:"
+                    + colour.Cursor.POS(y=7, x=15 - len(str(y)))
+                    + str(y)
+                )
             nat[:] = [x, y]
         else:
             in_streams[dest].append(x)
@@ -52,7 +64,7 @@ def out(id, num):
 
 import colorama as colour
 
-colour.init(autoreset=True)
+# colour.init(autoreset=True)
 off = colour.Back.BLACK + "  "
 idle_ = colour.Back.YELLOW + "  "
 active = colour.Back.GREEN + "  "
@@ -76,8 +88,8 @@ def print_vis():
         print((colour.Back.RESET + " ").join(square_for(j * 10 + i) for i in range(10)))
     print(
         colour.Fore.GREEN
+        + colour.Back.RESET
         + "Time:"
-        + " " * 24
         + colour.Cursor.POS(y=6, x=30 - len(str(cycles)))
         + str(cycles)
     )
