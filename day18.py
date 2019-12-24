@@ -87,7 +87,8 @@ from functools import lru_cache
 import string
 
 
-def reachable_keys(map, position, obtained):
+@lru_cache(maxsize=None)
+def reachable_keys(position, obtained):
     queue = deque([position])
     dists = {position: 0}
     keys = {}
@@ -119,7 +120,7 @@ def shortest_path(positions, obtained):
     keys = {
         key: (distance, position, robot)
         for robot, start in enumerate(positions)
-        for key, (distance, position) in reachable_keys(map, start, obtained).items()
+        for key, (distance, position) in reachable_keys(start, obtained).items()
     }
     if not keys:
         return 0
@@ -144,6 +145,7 @@ for y, row in enumerate(map):
     break
 print(shortest_path((position,), ""))
 shortest_path.cache_clear()
+reachable_keys.cache_clear()
 map[y - 1][x - 1] = "@"
 map[y - 1][x] = "#"
 map[y - 1][x + 1] = "@"
