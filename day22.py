@@ -98,26 +98,13 @@ deal with increment 65
 cut 921
 deal with increment 8
 cut -3094""".splitlines()
-from array import array
 
-# deck = list(range(10007))
-# deck = array("Q", range(119315717514047))
-# data = """deal into new stack
-# cut -2
-# deal with increment 7
-# cut 8
-# cut -4
-# deal with increment 7
-# cut 3
-# deal with increment 9
-# deal with increment 3
-# cut -1""".splitlines()
-# deck = list(range(10))
 import re
 
 deal_inc = re.compile(r"deal with increment (\d+)")
 deal_new = re.compile(r"deal into new stack")
 cut = re.compile(r"cut (-?\d+)")
+
 instructions = [
     [1, int(match.group(1))]
     if (match := cut.match(instruction))
@@ -126,37 +113,16 @@ instructions = [
     )
     for instruction in data
 ]
-# times = 101741582076661
-# deck_len = 119315717514047
+
 deck_len = 10007
-# position_track = 2020
-# previous = set()
-# order = []
-# period = 0
-# for time in range(times):
-#     if position_track in previous:
-#         period = time
-#         break
-#     previous.add(position_track)
-#     order.append(position_track)
-#     for instruction, arg in instructions[::-1]:
-#         if instruction == 1:
-#             position_track -= arg
-#         elif instruction == 2:
-#             position_track *= arg
-#         else:
-#             position_track = deck_len - position_track - 1
-#         position_track %= deck_len
-# print(order[times % period])
+
 deck = list(range(deck_len))
 for instruction in data:
     if match := deal_new.match(instruction):
         deck = deck[::-1]
     elif match := deal_inc.match(instruction):
         step = int(match.group(1))
-        # print(deck)
-        # deck = sum([deck[i::step] for i in range(step)], [])
-        # new_deck = array("Q", deck)
+
         new_deck = deck.copy()
         pos = 0
         while deck:
@@ -172,6 +138,7 @@ for instruction in data:
         print(instruction)
         exit()
 print(deck.index(2019))
+
 # part 2: number theory!
 # deck[n] = increment*n + offset
 # now what are increment and offset
@@ -226,6 +193,7 @@ print(deck.index(2019))
 # a = odiff
 # offset = odiff * (1 - pow(idiff, number, 119315717514047) * pow(1-idiff, 119315717514045, 119315717514047))
 # calculate diffs
+
 deck_len = 119315717514047
 times = 101741582076661
 offset, increment = (0, 1)
@@ -242,21 +210,10 @@ for instruction in data:
     elif match := cut.match(instruction):
         offset += increment * int(match.group(1))
         offset %= deck_len
-# offset1, increment1 = (0, 1)
 
-# for instruction in data:
-#     if match := deal_new.match(instruction):
-#         increment1 *= -1
-#         offset1 += increment1
-#     elif match := deal_inc.match(instruction):
-#         increment1 *= pow(int(match.group(1)), 10005, 10007)
-#     elif match := cut.match(instruction):
-#         offset1 += increment1 * int(match.group(1))
 final_inc = pow(increment, times, deck_len)
 final_off = offset * (
     (1 - pow(increment, times, deck_len)) * pow(1 - increment, deck_len - 2, deck_len)
 )
-# print((1879 * increment1 + offset1) % 10007)
+
 print((2020 * final_inc + final_off) % deck_len)
-# print(deck[2020])
-# print(deck)

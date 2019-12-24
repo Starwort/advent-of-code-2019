@@ -34,9 +34,12 @@ def has_matching(i: str):
 for i in input_range:
     if re.match(".*(00|11|22|33|44|55|66|77|88|99).*", str(i)) and is_ascending(str(i)):
         valid_pass += 1
+
 print(valid_pass)
 valid_pass = 0
+
 for i in input_range:
     if has_matching(str(i)) and is_ascending(str(i)):
         valid_pass += 1
+
 print(valid_pass)

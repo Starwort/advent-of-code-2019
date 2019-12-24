@@ -67,12 +67,16 @@ map = """..................#######................................
 # L,10,R,8,R,6,R,10 A
 # L,10,R,8,R,8 C
 # L,10,R,8,R,6,R,10 A
+
 total = 0
+
 for y, row in enumerate(map):
     for x, tile in enumerate(row):
         if tile == "O":
             total += y * x
+
 print(total)
+
 queue = [
     ord(i)
     for i in "A,B,A,B,C,C,B,A,C,A\nL,10,R,8,R,6,R,10\nL,12,R,8,L,12\nL,10,R,8,R,8\nn\n"

@@ -2054,30 +2054,6 @@ W5K)PW3
 Z2K)R6H
 6XP)94V
 LQQ)PY3""".splitlines()
-# data = """COM)B
-# B)C
-# C)D
-# D)E
-# E)F
-# B)G
-# G)H
-# D)I
-# E)J
-# J)K
-# K)L""".splitlines()
-# data = """COM)B
-# B)C
-# C)D
-# D)E
-# E)F
-# B)G
-# G)H
-# D)I
-# E)J
-# J)K
-# K)L
-# K)YOU
-# I)SAN""".splitlines()
 
 
 class Object:
@@ -2116,25 +2092,28 @@ class Object:
 from collections import deque
 from sys import setrecursionlimit
 from itertools import zip_longest
+import typing
 
 setrecursionlimit(1000000)
-objects = {}
+objects: typing.Dict[str, Object] = {}
+
 for i in data:
-    start, end = i.split(")")
-    if start in objects:
-        start = objects[start]
+    _start, _end = i.split(")")
+    if _start in objects:
+        start = objects[_start]
     else:
-        objects[start] = start = Object(start)
-    if end in objects:
-        end = objects[end]
+        objects[_start] = start = Object(_start)
+    if _end in objects:
+        end = objects[_end]
     else:
-        objects[end] = end = Object(end)
+        objects[_end] = end = Object(_end)
     start.add_orbit(end)
+
 print(objects["COM"].total_orbits())
 
 path_to_san = objects["COM"].search_orbits_item(objects["SAN"])
 path_to_me = objects["COM"].search_orbits_item(objects["YOU"])
-total_path = deque()
+total_path: deque = deque()
 print(path_to_me, path_to_san)
 for i, j in zip_longest(path_to_me, path_to_san):
     print(i, j)

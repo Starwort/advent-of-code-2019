@@ -4,10 +4,13 @@ from collections import defaultdict
 
 wire1 = defaultdict(bool)  # type: ignore
 wire2 = defaultdict(bool)  # type: ignore
+
 wire1pos = (0, 0)
+
 for instruction in data[0].split(","):
     direction, *dist = instruction
     distance = int("".join(dist))
+
     if direction == "R":
         newpos = wire1pos[0] + distance, wire1pos[1]
         for i in range(wire1pos[0], newpos[0]):
@@ -24,11 +27,15 @@ for instruction in data[0].split(","):
         newpos = wire1pos[0], wire1pos[1] - distance
         for i in range(wire1pos[1], newpos[1], -1):
             wire1[wire1pos[0], i] = True
+
     wire1pos = newpos
+
 wire2pos = (0, 0)
+
 for instruction in data[1].split(","):
     direction, *dist = instruction
     distance = int("".join(dist))
+
     if direction == "R":
         newpos = wire2pos[0] + distance, wire2pos[1]
         for i in range(wire2pos[0], newpos[0]):
@@ -45,88 +52,98 @@ for instruction in data[1].split(","):
         newpos = wire2pos[0], wire2pos[1] - distance
         for i in range(wire2pos[1], newpos[1], -1):
             wire2[wire2pos[0], i] = True
+
     wire2pos = newpos
+
 wire1[0, 0] = False
+
 intersections = [i for i, j in wire1.items() if j and wire2[i]]
 distances = [sum(map(abs, i)) for i in intersections]
 print(min(distances))
 
-
-wire1 = defaultdict(lambda: float("inf"))  # type: ignore
-wire2 = defaultdict(lambda: float("inf"))  # type: ignore
+wire1_part_2 = defaultdict(lambda: float("inf"))  # type: ignore
+wire2_part_2 = defaultdict(lambda: float("inf"))  # type: ignore
 wire1pos = (0, 0)
 wire1steps = 0
+
 for instruction in data[0].split(","):
     direction, *dist = instruction
     distance = int("".join(dist))
+
     if direction == "R":
         newpos = wire1pos[0] + distance, wire1pos[1]
         for i in range(wire1pos[0], newpos[0]):
-            wire1[i, wire1pos[1]] = min(
-                wire1[i, wire1pos[1]], wire1steps + i - wire1pos[0]
+            wire1_part_2[i, wire1pos[1]] = min(
+                wire1_part_2[i, wire1pos[1]], wire1steps + i - wire1pos[0]
             )
         wire1steps += distance
     if direction == "L":
         newpos = wire1pos[0] - distance, wire1pos[1]
         for i in range(wire1pos[0], newpos[0], -1):
-            wire1[i, wire1pos[1]] = min(
-                wire1[i, wire1pos[1]], wire1steps + abs(i - wire1pos[0])
+            wire1_part_2[i, wire1pos[1]] = min(
+                wire1_part_2[i, wire1pos[1]], wire1steps + abs(i - wire1pos[0])
             )
         wire1steps += distance
     if direction == "U":
         newpos = wire1pos[0], wire1pos[1] + distance
         for i in range(wire1pos[1], newpos[1]):
-            wire1[wire1pos[0], i] = min(
-                wire1[wire1pos[0], i], wire1steps + i - wire1pos[1]
+            wire1_part_2[wire1pos[0], i] = min(
+                wire1_part_2[wire1pos[0], i], wire1steps + i - wire1pos[1]
             )
         wire1steps += distance
     if direction == "D":
         newpos = wire1pos[0], wire1pos[1] - distance
         for i in range(wire1pos[1], newpos[1], -1):
-            wire1[wire1pos[0], i] = min(
-                wire1[wire1pos[0], i], wire1steps + abs(i - wire1pos[1])
+            wire1_part_2[wire1pos[0], i] = min(
+                wire1_part_2[wire1pos[0], i], wire1steps + abs(i - wire1pos[1])
             )
         wire1steps += distance
+
     wire1pos = newpos
+
 wire2pos = (0, 0)
 wire2steps = 0
+
 for instruction in data[1].split(","):
     direction, *dist = instruction
     distance = int("".join(dist))
+
     if direction == "R":
         newpos = wire2pos[0] + distance, wire2pos[1]
         for i in range(wire2pos[0], newpos[0]):
-            wire2[i, wire2pos[1]] = min(
-                wire2[i, wire2pos[1]], wire2steps + i - wire2pos[0]
+            wire2_part_2[i, wire2pos[1]] = min(
+                wire2_part_2[i, wire2pos[1]], wire2steps + i - wire2pos[0]
             )
         wire2steps += distance
     if direction == "L":
         newpos = wire2pos[0] - distance, wire2pos[1]
         for i in range(wire2pos[0], newpos[0], -1):
-            wire2[i, wire2pos[1]] = min(
-                wire2[i, wire2pos[1]], wire2steps + abs(i - wire2pos[0])
+            wire2_part_2[i, wire2pos[1]] = min(
+                wire2_part_2[i, wire2pos[1]], wire2steps + abs(i - wire2pos[0])
             )
         wire2steps += distance
     if direction == "U":
         newpos = wire2pos[0], wire2pos[1] + distance
         for i in range(wire2pos[1], newpos[1]):
-            wire2[wire2pos[0], i] = min(
-                wire2[wire2pos[0], i], wire2steps + i - wire2pos[1]
+            wire2_part_2[wire2pos[0], i] = min(
+                wire2_part_2[wire2pos[0], i], wire2steps + i - wire2pos[1]
             )
         wire2steps += distance
     if direction == "D":
         newpos = wire2pos[0], wire2pos[1] - distance
         for i in range(wire2pos[1], newpos[1], -1):
-            wire2[wire2pos[0], i] = min(
-                wire2[wire2pos[0], i], wire2steps + abs(i - wire2pos[1])
+            wire2_part_2[wire2pos[0], i] = min(
+                wire2_part_2[wire2pos[0], i], wire2steps + abs(i - wire2pos[1])
             )
         wire2steps += distance
+
     wire2pos = newpos
-wire1[0, 0] = float("inf")
+
+wire1_part_2[0, 0] = float("inf")
 intersections = [
-    (j, wire2[i])
-    for i, j in wire1.items()
-    if j != float("inf") and wire2[i] != float("inf")
+    (j, wire2_part_2[i])
+    for i, j in wire1_part_2.items()
+    if j != float("inf") and wire2_part_2[i] != float("inf")
 ]
 print(intersections)
 distances = [sum(i) for i in intersections]

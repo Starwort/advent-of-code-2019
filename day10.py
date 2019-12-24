@@ -33,27 +33,6 @@ map = """.#......##.#..#.......#####...#..
 ...#...##...#.......#....##.#....
 .#....#.#...#.#...##....#..##.#.#
 .#.#....##.......#.....##.##.#.##""".splitlines()
-# map = """.#..##.###...#######
-# ##.############..##.
-# .#.######.########.#
-# .###.#######.####.#.
-# #####.##.#.##.###.##
-# ..#####..#.#########
-# ####################
-# #.####....###.#.#.##
-# ##.#################
-# #####.##.###..####..
-# ..######..##.#######
-# ####.##.####...##..#
-# .#####..#.######.###
-# ##...#.##########...
-# #.##########.#######
-# .####.#.###.###.#.##
-# ....##.##.###..#####
-# .#.#.###########.###
-# #.#.#.#####.####.###
-# ###.##.####.##.#..##""".splitlines()
-# target = 5, 8
 width = height = len(map)
 
 
@@ -89,6 +68,7 @@ def get_line_of_sight(x, y):
                         if map[ny][nx] == "#":
                             points.append((nx, ny))
                             break
+
     for ox in range(1, width):
         for oy in range(1, width):
             if gcd(oy, ox) != 1:
@@ -103,16 +83,6 @@ def get_line_of_sight(x, y):
                             points.append((nx, ny))
                             break
 
-    # for index_y, row in enumerate(map):
-    #     for index_x, tile in enumerate(row):
-    #         if (index_x, index_y) == (x, y):
-    #             print(f"[{tile}]", end="")
-    #         elif (index_x, index_y) in points:
-    #             print(f"({tile})", end="")
-    #         else:
-    #             print(f" {tile} ", end="")
-    #     print()
-    # print()
     return set(points)
 
 
@@ -121,15 +91,15 @@ for y, row in enumerate(map):
     for x, tile in enumerate(row):
         if tile == "#":
             tiles[len(get_line_of_sight(x, y))] = x, y
+
 key = max(tiles.keys())
 print(key, tiles[key])
+
 x, y = tiles[key]
 asteroids = get_line_of_sight(x, y)
+
 sorted_points = sorted(
     asteroids, key=lambda point: atan2(point[0] - x, y - point[1]) % (2 * pi)
 )
 point = sorted_points[199]
-# print(sorted_points.index((8, 2)))
-# print(sorted_points[100:115])
 print(point[0] * 100 + point[1])
-# get_line_of_sight(*target)

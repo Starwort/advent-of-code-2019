@@ -82,6 +82,7 @@ map = [
 #.....#.........#...........#...........#.#.......#.#.......#.................#.#
 #################################################################################""".splitlines()
 ]
+
 from collections import deque
 from functools import lru_cache
 import string
@@ -92,8 +93,9 @@ def reachable_keys(position, obtained):
     queue = deque([position])
     dists = {position: 0}
     keys = {}
+
     while queue:
-        col, row = queue.popleft()
+        row, col = queue.popleft()
         for (x, y) in [
             (row, col + 1),
             (row, col - 1),
@@ -102,16 +104,22 @@ def reachable_keys(position, obtained):
         ]:
             if not (0 <= x < len(map[0]) and 0 <= y < len(map)):
                 continue
+
             tile = map[y][x]
+
             if tile == "#" or (x, y) in dists:
                 continue
-            dists[x, y] = dists[col, row] + 1
+
+            dists[x, y] = dists[row, col] + 1
+
             if tile in string.ascii_uppercase and tile.lower() not in obtained:
                 continue
+
             if tile in string.ascii_lowercase and tile not in obtained:
                 keys[tile] = dists[x, y], (x, y)
             else:
                 queue.append((x, y))
+
     return keys
 
 
@@ -122,9 +130,12 @@ def shortest_path(positions, obtained):
         for robot, start in enumerate(positions)
         for key, (distance, position) in reachable_keys(start, obtained).items()
     }
+
     if not keys:
         return 0
+
     distances = []
+
     for key, (distance, position, robot) in keys.items():
         robot_positions = tuple(
             [initial, position][i == robot] for i, initial in enumerate(positions)
@@ -132,6 +143,7 @@ def shortest_path(positions, obtained):
         distances.append(
             distance + shortest_path(robot_positions, "".join(sorted(obtained + key)))
         )
+
     return min(distances)
 
 
@@ -143,9 +155,12 @@ for y, row in enumerate(map):
     else:
         continue
     break
+
 print(shortest_path((position,), ""))
+
 shortest_path.cache_clear()
 reachable_keys.cache_clear()
+
 map[y - 1][x - 1] = "@"
 map[y - 1][x] = "#"
 map[y - 1][x + 1] = "@"

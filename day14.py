@@ -86,10 +86,11 @@ recipes = [[[item for item in pattern.findall(line)]] for line in data]
 for reaction in recipes:
     for index, item in enumerate(reaction[0]):
         reaction[0][index] = (int(item[0]), item[1])
+
     reaction.append(reaction[0].pop())
 
-leftover_ingredients = defaultdict(int)
-float_leftover_ingredients = defaultdict(int)
+leftover_ingredients = defaultdict(int)  # type: ignore
+float_leftover_ingredients = defaultdict(int)  # type: ignore
 
 
 def ingredients_for(quantity, product):
@@ -97,18 +98,22 @@ def ingredients_for(quantity, product):
     ingredients, product_tuple = recipe
     product_quantity = product_tuple[0]
     recipe_times = ceil(quantity / product_quantity)
+
     adjusted_ingredients = [
         (i[0] * recipe_times - leftover_ingredients[i[1]], i[1]) for i in ingredients
     ]
     final = []
+
     for i, material in adjusted_ingredients:
         leftover_ingredients[material] = 0
         if i < 0:
             leftover_ingredients[material] = -i
         else:
             final.append((i, material))
+
     if product_quantity * recipe_times > quantity:
         leftover_ingredients[product] += product_quantity * recipe_times - quantity
+
     return final
 
 
@@ -117,21 +122,25 @@ def float_ingredients_for(quantity, product):
     ingredients, product_tuple = recipe
     product_quantity = product_tuple[0]
     recipe_times = quantity / product_quantity
+
     adjusted_ingredients = [
         (i[0] * recipe_times - float_leftover_ingredients[i[1]], i[1])
         for i in ingredients
     ]
     final = []
+
     for i, material in adjusted_ingredients:
         float_leftover_ingredients[material] = 0
         if i < 0:
             float_leftover_ingredients[material] = -i
         else:
             final.append((i, material))
+
     if product_quantity * recipe_times > quantity:
         float_leftover_ingredients[product] += (
             product_quantity * recipe_times - quantity
         )
+
     return final
 
 
@@ -143,15 +152,14 @@ def calculate_ore(fuel_amount=1):
     while to_calculate:
         material = list(to_calculate.keys())[0]
         amount = to_calculate.pop(material)
-        # print("produce", material, amount)
-        # print(leftover_ingredients)
         ingredients = ingredients_for(amount, material)
-        # print("need", ingredients)
+
         for i in ingredients:
             if i[1] == "ORE":
                 ore += i[0]
             else:
                 to_calculate[i[1]] += i[0]
+
     return ore
 
 
@@ -163,15 +171,14 @@ def calculate_ore_float(fuel_amount=1):
     while to_calculate:
         material = list(to_calculate.keys())[0]
         amount = to_calculate.pop(material)
-        # print("produce", material, amount)
-        # print(leftover_ingredients)
         ingredients = float_ingredients_for(amount, material)
-        # print("need", ingredients)
+
         for i in ingredients:
             if i[1] == "ORE":
                 ore += i[0]
             else:
                 to_calculate[i[1]] += i[0]
+
     return ore
 
 
@@ -179,9 +186,13 @@ if __name__ == "__main__":
     print(calculate_ore())
 
     AVAILABLE_ORE = 1000000000000
+
     max_fuel = int(AVAILABLE_ORE / ceil(calculate_ore_float()))
+
     leftover_ingredients.clear()
+
     while calculate_ore(max_fuel + 1) <= AVAILABLE_ORE:
         max_fuel += 1
         leftover_ingredients.clear()
+
     print(int(max_fuel))
