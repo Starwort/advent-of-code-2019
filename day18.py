@@ -88,6 +88,16 @@ from functools import lru_cache
 import string
 
 
+@lru_cache(maxsize=26)
+def key_to_bit(key: str) -> int:
+    return 1 << (ord(key) - 97)
+
+
+@lru_cache(maxsize=26)
+def door_to_bit(key: str) -> int:
+    return 1 << (ord(key) - 65)
+
+
 @lru_cache(maxsize=None)
 def reachable_keys(position, obtained):
     queue = deque([position])
@@ -107,10 +117,10 @@ def reachable_keys(position, obtained):
 
             dists[x, y] = dists[row, col] + 1
 
-            if tile in string.ascii_uppercase and tile.lower() not in obtained:
+            if tile in string.ascii_uppercase and not obtained & door_to_bit(tile):
                 continue
 
-            if tile in string.ascii_lowercase and tile not in obtained:
+            if tile in string.ascii_lowercase and not obtained & key_to_bit(tile):
                 keys[tile] = dists[x, y], (x, y)
             else:
                 queue.append((x, y))
@@ -136,7 +146,7 @@ def shortest_path(positions, obtained):
             [initial, position][i == robot] for i, initial in enumerate(positions)
         )
         distances.append(
-            distance + shortest_path(robot_positions, "".join(sorted(obtained + key)))
+            distance + shortest_path(robot_positions, obtained | key_to_bit(key))
         )
 
     return min(distances)
@@ -151,7 +161,7 @@ for y, row in enumerate(map):
         continue
     break
 
-print(shortest_path((position,), ""))
+print(shortest_path((position,), 0))
 
 shortest_path.cache_clear()
 reachable_keys.cache_clear()
@@ -167,5 +177,5 @@ map[y + 1][x] = "#"
 map[y + 1][x + 1] = "@"
 
 print(
-    shortest_path(((x - 1, y - 1), (x - 1, y + 1), (x + 1, y - 1), (x + 1, y + 1)), "")
+    shortest_path(((x - 1, y - 1), (x - 1, y + 1), (x + 1, y - 1), (x + 1, y + 1)), 0)
 )
