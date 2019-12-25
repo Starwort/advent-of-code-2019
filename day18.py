@@ -96,13 +96,8 @@ def reachable_keys(position, obtained):
 
     while queue:
         row, col = queue.popleft()
-        for (x, y) in [
-            (row, col + 1),
-            (row, col - 1),
-            (row + 1, col),
-            (row - 1, col),
-        ]:
-            if not (0 <= x < len(map[0]) and 0 <= y < len(map)):
+        for (x, y) in [(row, col + 1), (row, col - 1), (row + 1, col), (row - 1, col)]:
+            if x not in range(81) or y not in range(81):
                 continue
 
             tile = map[y][x]
