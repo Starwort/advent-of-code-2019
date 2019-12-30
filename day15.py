@@ -141,9 +141,8 @@ def input_fn():
 computer = Computer(data, in_function=input_fn, out_function=output_fn)
 computer.run_until_complete()
 
-print(cursor_pos)
-
 if PRETTY_PRINT_MAP:
+    print(cursor_pos)
     for row in range(min_y, max_y + 1):
         print(
             "".join(
@@ -199,4 +198,3 @@ map_oxy = defaultdict(lambda: -1)  # type: ignore
 search_map(map_oxy, x, y, 0, False)
 
 print(max(map_oxy.values()))
-
