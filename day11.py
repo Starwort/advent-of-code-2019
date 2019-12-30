@@ -1,14 +1,12 @@
 from intcode_computer_rewrite import Computer
 from collections import defaultdict
+from itertools import zip_longest
 
-part2 = True
 robodir = 0  # up
 roboloc = 0, 0
 panels = defaultdict(int)  # type: ignore
 turn_this_out = False
 painted = set()
-if part2:
-    panels[0, 0] = 1
 
 
 def handle_out(out):
@@ -42,22 +40,69 @@ comp.run_until_complete()
 
 print(len(painted))
 
+# reset and run part 2
+
+robodir = 0  # up
+roboloc = 0, 0
+panels = defaultdict(int)  # type: ignore
+turn_this_out = False
+painted = set()
+
+panels[0, 0] = 1
+
+comp = Computer(data, in_function=handle_in, out_function=handle_out)
+comp.run_until_complete()
+
 min_x = min(i[0] for i in panels.keys())
 max_x = max(i[0] for i in panels.keys())
 min_y = min(i[1] for i in panels.keys())
 max_y = max(i[1] for i in panels.keys())
 
+
+def group(iterable, n):
+    return zip_longest(*[iter(iterable)] * n, fillvalue=0)
+
+
+def quad_to_char(tl: int, tr: int, bl: int, br: int) -> str:
+    char = {
+        0: {
+            0: {0: {0: " ", 1: "▗"}, 1: {0: "▖", 1: "▄"}},
+            1: {0: {0: "▝", 1: "▐"}, 1: {0: "▞", 1: "▟"}},
+        },
+        1: {
+            0: {0: {0: "▘", 1: "▚"}, 1: {0: "▌", 1: "▙"}},
+            1: {0: {0: "▀", 1: "▜"}, 1: {0: "▛", 1: "█"}},
+        },
+    }
+    try:
+        return char[tl][tr][bl][br]
+    except:
+        print(tl, tr, bl, br)
+        raise
+
+
 try:
     import colorama as colour  # type: ignore
 
     colour.init(autoreset=True)
-    black = colour.Back.BLACK + "  "
-    white = colour.Back.WHITE + "  "
-except:
-    black = "  "
-    white = "██"
+    line_start = colour.Fore.WHITE + colour.Back.BLACK
+    # black = colour.Back.BLACK + "  "
+    # white = colour.Back.WHITE + "  "
+except ImportError:
+    line_start = ""
+    # black = "  "
+    # white = "██"
+    pass
 
-for y in range(min_y, max_y + 1):
-    for x in range(min_x, max_x + 1):
-        print([black, white][panels[x, y]], end="")
+for y1 in range(min_y, max_y + 1, 2):
+    y2 = y1 + 1
+    for x1 in range(min_x, max_x + 1, 2):
+        x2 = x1 + 1
+        print(
+            line_start
+            + quad_to_char(
+                panels[x1, y1], panels[x2, y1], panels[x1, y2], panels[x2, y2]
+            ),
+            end="",
+        )
     print()
