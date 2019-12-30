@@ -145,6 +145,6 @@ intersections = [
     for i, j in wire1_part_2.items()
     if j != float("inf") and wire2_part_2[i] != float("inf")
 ]
-print(intersections)
+# print(intersections)
 distances = [sum(i) for i in intersections]
 print(min(distances))
