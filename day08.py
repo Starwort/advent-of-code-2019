@@ -1,3 +1,5 @@
+from itertools import zip_longest
+
 width = 25
 height = 6
 (
@@ -6,7 +8,7 @@ height = 6
 
 
 def group(iterable, n):
-    return zip(*[iter(iterable)] * n)
+    return zip_longest(*[iter(iterable)] * n, fillvalue="0")
 
 
 image = []
@@ -27,11 +29,33 @@ try:
     import colorama as colour  # type: ignore
 
     colour.init(autoreset=True)
-    black = colour.Back.BLACK + "  "
-    white = colour.Back.WHITE + "  "
-except:
-    black = "  "
-    white = "██"
+    line_start = colour.Fore.WHITE + colour.Back.BLACK
+    # black = colour.Back.BLACK + "  "
+    # white = colour.Back.WHITE + "  "
+except ImportError:
+    line_start = ""
+    # black = "  "
+    # white = "██"
+    pass
+
+
+def quad_to_char(tl: str, tr: str, bl: str, br: str) -> str:
+    char = {
+        "0": {
+            "0": {"0": {"0": " ", "1": "▗"}, "1": {"0": "▖", "1": "▄"}},
+            "1": {"0": {"0": "▝", "1": "▐"}, "1": {"0": "▞", "1": "▟"}},
+        },
+        "1": {
+            "0": {"0": {"0": "▘", "1": "▚"}, "1": {"0": "▌", "1": "▙"}},
+            "1": {"0": {"0": "▀", "1": "▜"}, "1": {"0": "▛", "1": "█"}},
+        },
+    }
+    try:
+        return char[tl][tr][bl][br]
+    except:
+        print(tl, tr, bl, br)
+        raise
+
 
 final_image = deepcopy(image[0])
 
@@ -41,5 +65,11 @@ for layer in image:
             if col != "2" and final_image[y][x] == "2":
                 final_image[y][x] = col
 
-for row in final_image:
-    print("".join(black if i == "0" else white for i in row))
+for row1, row2 in group(final_image, 2):
+    print(
+        line_start
+        + "".join(
+            quad_to_char(tl, tr, bl, br)
+            for (tl, tr), (bl, br) in zip(group(row1, 2), group(row2, 2))
+        )
+    )
