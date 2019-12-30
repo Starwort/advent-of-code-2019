@@ -2114,13 +2114,13 @@ print(objects["COM"].total_orbits())
 path_to_san = objects["COM"].search_orbits_item(objects["SAN"])
 path_to_me = objects["COM"].search_orbits_item(objects["YOU"])
 total_path: deque = deque()
-print(path_to_me, path_to_san)
+# print(path_to_me, path_to_san)
 for i, j in zip_longest(path_to_me, path_to_san):
-    print(i, j)
+    # print(i, j)
     if i is not j:
         if i is not None:
             total_path.appendleft(i)
         if j is not None:
             total_path.append(j)
-print(total_path)
+# print(total_path)
 print(len(total_path))
