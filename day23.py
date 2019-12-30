@@ -21,7 +21,7 @@ def _in(id):
             history[:] = [history[1], nat[1]]
             if history[0] == history[1]:
                 print(history[1])
-                exit()
+                raise StopIteration
             idle[0] = False
         return -1
 
@@ -47,6 +47,9 @@ computers = [
     Computer(data, in_function=partial(_in, i), out_function=partial(out, i))
     for i in range(50)
 ]
-while True:
-    for comp in computers:
-        comp.eval_one_instruction()
+try:
+    while True:
+        for comp in computers:
+            comp.eval_one_instruction()
+except StopIteration:
+    pass
