@@ -25,7 +25,7 @@ output_array = data
 for i in range(100):
     output_array = calculate_fft(output_array)
 
-print(output_array[:8])
+print("".join(map(str, output_array[:8])))
 
 offset = int("".join(str(i) for i in data[:7]))
 
@@ -39,4 +39,4 @@ for i in range(100):
 
     data2 = [abs(i) % 10 for i in reversed(rev_sum)]
 
-print(data2[:8])
+print("".join(map(str, data2[:8])))
