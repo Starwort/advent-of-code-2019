@@ -1,5 +1,10 @@
 from intcode_computer_rewrite import Computer
 
+if __name__ == "__main__":
+    PRINT_ALL = True
+else:
+    PRINT_ALL = False
+
 map = """..................#######................................
 ..................#.....#................................
 ..................#.....#................................
@@ -91,7 +96,8 @@ def ai():
 
 def out(i):
     if i < 128:
-        print(chr(i), end="")
+        if PRINT_ALL:
+            print(chr(i), end="")
     else:
         print(i)
 
