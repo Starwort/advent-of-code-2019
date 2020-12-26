@@ -113,7 +113,7 @@ ZZ............#.#.#.#...#.#                                                     
 
 from collections import defaultdict, deque
 
-PRETTY_PRINT_MAP = True
+PRETTY_PRINT_MAP = __name__ == "__main__"
 
 header_1, header_2, *map, footer_1, footer_2 = map
 
